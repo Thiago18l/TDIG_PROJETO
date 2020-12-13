@@ -1,6 +1,6 @@
 import React from "react";
-import imgSala from '../../assets/img/salaDeAula.jpg'
-import dashboardCss from "./dashboard.css";
+import imgSala from '../../assets/img/dashboard.jpg'
+import "./dashboard.css";
 
 export default function Dashboard() {
     return (

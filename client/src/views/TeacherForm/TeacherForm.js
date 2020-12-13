@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -10,6 +10,8 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+
+import api from '../../api/api'
 
 const styles = {
     cardCategoryWhite: {
@@ -34,34 +36,49 @@ const useStyles = makeStyles(styles);
 
 export default function TeacherForm() {
     const classes = useStyles();
+
+    const [matricula, setMatricula] = useState("")
+    const [nome, setNome] = useState("")
+    const [curso, setCurso] = useState("")
+
+    const handleCreate = async (e) => {
+        e.preventDefault()
+        const data = {
+            matricula,
+            nome,
+            curso
+        }
+        try {
+            await api.post('adicionarProfessor', data)
+            alert('Professor cadastrado')
+        } catch (e) {
+            console.log(e)
+        }
+    }
     return (
         <div>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader color="danger">
-                            <h4 className={classes.cardTitleWhite}>Teacher</h4>
+                            <h4 className={classes.cardTitleWhite}>Professor</h4>
                             <p className={classes.cardCategoryWhite}>
-                                Complete the Teacher information
+                                Insira os dados do Professor
                             </p>
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="id"
-                                        id="id"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
+                                <GridItem xs={12} sm={12} md={12}>
                                     <CustomInput
                                         labelText="matricula"
                                         id="matricula"
                                         formControlProps={{
                                             fullWidth: true,
+                                        }}
+                                        inputProps={{
+                                            value: matricula,
+                                            onChange: (e) =>
+                                                setMatricula(e.target.value),
                                         }}
                                     />
                                 </GridItem>
@@ -69,23 +86,32 @@ export default function TeacherForm() {
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <CustomInput
-                                        labelText="nome"
+                                        labelText="Nome"
                                         id="nome"
                                         formControlProps={{
                                             fullWidth: true,
+                                        }}
+                                        inputProps={{
+                                            value: nome,
+                                            onChange: (e) =>
+                                                setNome(e.target.value),
                                         }}
                                     />
                                 </GridItem>
                             </GridContainer>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
+                                <GridItem xs={12} sm={12} md={12}>
                                     <CustomInput
-                                        labelText="curso"
-                                        id="keyword-1"
+                                        labelText="Curso"
+                                        id="curso"
                                         formControlProps={{
                                             fullWidth: true,
                                         }}
-                                    />
+                                        inputProps={{
+                                            value: curso,
+                                            onChange: (e) =>
+                                                setCurso(e.target.value),
+                                        }} />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
@@ -100,7 +126,7 @@ export default function TeacherForm() {
                         </CardBody>
                         <CardFooter>
                             <Button color="danger">Cancel</Button>
-                            <Button color="success">Save</Button>
+                            <Button color="success" onClick={handleCreate}>Save</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>

@@ -1,15 +1,16 @@
-import React, {useState} from "react";
+import React, {useState, useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import axios from 'axios';
 
+import api from '../../api/api'
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -44,33 +45,108 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
 
-    const [data, setData] = useState([
+    const [alunos, setAlunos] = useState([]);
+    const [professores, setProfessores] = useState([])
+    const [projetos, setProjetos] = useState([])
+    const columns = [
+      {
+        Header: 'ID',
+        accessor: 'id',
+      },
+      {
+        Header: 'Matricula',
+        accessor: 'matricula',
+      },
+      {
+        Header: 'Nome',
+        accessor: 'nome',
+      },
+      {
+        Header: 'CPF',
+        accessor: 'cpf',
+      },
+      {
+        Header: 'Curso',
+        accessor: 'curso'
+      },
+    ]
+  const columns_prof = [
+    {
+      Header: 'ID',
+      accessor: 'id',
+    },
+    {
+      Header: 'Matricula',
+      accessor: 'matricula',
+    },
+    {
+      Header: 'Nome',
+      accessor: 'nome',
+    },
+    {
+      Header: 'Curso',
+      accessor: 'curso'
+    },
+  ]
+  const columns_projetos = [
+    {
+      Header: 'ID',
+      accessor: 'id',
+    },
+    {
+      Header: 'Titulo',
+      accessor: 'titulo',
+    },
+    {
+      Header: 'Resumo',
+      accessor: 'resumo',
+    },
+    {
+      Header: 'Palavra chave 1',
+      accessor: 'key1'
+    },
+    {
+      Header: 'Palavra chave 2',
+      accessor: 'key2'
+    },
+    {
+      Header: 'Palavra chave 3',
+      accessor: 'key3'
+    },
+    {
+      Header: 'URL',
+      accessor: 'url'
+    },
+    {
+      Header: 'ID professor',
+      accessor: 'id_professor'
+    },
+    {
+      Header: 'ID Aluno',
+      accessor: 'id_aluno'
+    },
+  ]
 
-    ]);
 
-    function handleQuery(){
-        axios
-          .get("http://localhost:8080/TemplateWS/rest/ws/alunos/JSON")
-          .then(response => {
-
-            console.log(response.data.lista);
-            const alunos = response.data.lista.map(data => {
-              return {
-                id: data.id,
-                cpf: data.cpf,
-                matricula: data.matricula,
-                nome: data.nome,
-                idEndereco: data.idEndereco,
-                curso: data.curso
-              }
-            })
-            setData(alunos);
-          })
-      }
-
-
+    useEffect(() => {
+      api.get('alunos')
+      .then(response => {
+        setAlunos(response.data)
+      })
+      api.get('professores')
+      .then(response => {
+        console.log(response.data)
+        setProfessores(response.data)
+      })
+      api.get('projetos')
+      .then(response => {
+        setProjetos(response.data)
+      })
+    }, [setAlunos, setProfessores, setProjetos])
+    
     const classes = useStyles();
     return (
+      
         <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
             <Card>
@@ -81,10 +157,9 @@ export default function TableList() {
                     </p>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                    tableHeaderColor="primary"
-                    tableHead={["ID", "Matrícula", "Nome", "CPF", "IDEndereço", "Curso"]}
-                    tableData={[]}
+                    <ReactTable 
+                    data={alunos}
+                    columns={columns}
                     />
                 </CardBody>
             </Card>
@@ -100,13 +175,10 @@ export default function TableList() {
                     </p>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                    tableHeaderColor="primary"
-                    tableHead={["ID", "Matrícula", "Nome", "Curso", "IDEndereço"]}
-                    tableData={[
-                        [],
-                    ]}
-                    />
+                  <ReactTable 
+                  data={professores}
+                  columns={columns_prof}
+                  />
                 </CardBody>
             </Card>
         </GridItem>
@@ -119,12 +191,9 @@ export default function TableList() {
                     </p>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                    tableHeaderColor="primary"
-                    tableHead={["ID", "Título do Projeto", "Área do Projeto", "Resumo", "Palavra-Chave 1", "Palavra-Chave 2", "Palavra-Chave 3", "Url", "ID do Professor Responsável", "ID do Aluno Participante"]}
-                    tableData={[
-                        [],
-                    ]}
+                    <ReactTable
+                    data={projetos}
+                    columns={columns_projetos}
                     />
                 </CardBody>
             </Card>
