@@ -100,7 +100,7 @@ routes.post('/adicionaAluno', (req, res) => {
     try {
         let id = uuid++
         const { matricula, nome, cpf, curso } = req.body;
-        const user = { id, nome, matricula, cpf, curso }
+        const user = { id, matricula, nome, cpf, curso }
         aluno.push(user)
         res.status(201).send(user)
     } catch (e) {
@@ -164,9 +164,9 @@ routes.get('/professores/:id', (req, res) => {
 })
 routes.post('/adicionarProfessor', (req, res) => {
     try {
-        let _id =  uuid_teacher++;
+        let id =  uuid_teacher++;
         const { matricula, nome, curso } = req.body
-        const professor = { _id, matricula, nome, curso }
+        const professor = { id, matricula, nome, curso }
         professores.push(professor)
         res.status(201).send(professor)
     } catch (e) {
@@ -202,6 +202,7 @@ routes.delete('/removeProfessor/:id', (req, res) => {
 
 routes.get('/projetos', (req, res) => {
     try {
+        console.log(projetos)
         res.status(200).send(projetos)
     } catch (e) {
         console.log(e)
@@ -211,10 +212,10 @@ routes.get('/projetos', (req, res) => {
 routes.post('/adicionarProjeto', (req, res) => {
     try {
         let id = uuid_projetos++;
-        const { titulo, areaAtuacao, resumo, palavrachave1, 
-                palavrachave2, palavrachave3, url, 
+        const { titulo, areaAtuacao, resumo, key1, 
+                key2, key3, url, 
                 id_professor, id_aluno } = req.body
-        const projeto = { id, titulo, areaAtuacao, resumo, palavrachave1, palavrachave2, palavrachave3,
+        const projeto = { id, titulo, areaAtuacao, resumo, key1, key2, key3,
             url, id_professor, id_aluno
         }
         projetos.push(projeto)
