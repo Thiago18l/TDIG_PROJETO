@@ -1,7 +1,6 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -11,6 +10,7 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import axios from "axios";
 
 const styles = {
     cardCategoryWhite: {
@@ -33,59 +33,53 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+export default function StudentForm() {
     const classes = useStyles();
+
+    const { useState } = React;
+
+    const [data, setData] = useState({
+        id: '',
+        cpf: '',
+        matricula: '',
+        nome: '',
+        endereco: '',
+        curso: '',
+    });
+
+    async function handleCreate(event){
+
+        const user = {
+            id: event.id,
+            cpf: event.cpf,
+            matricula: event.matricula,
+            nome: event.nome,
+            idEndereco: event.idEndereco,
+            curso: event.curso
+        }
+
+        await axios.post("http://localhost:8080/TemplateWS/rest/ws/cadastraAluno", user)
+            .then(resposta => console.log(resposta))
+            .catch(error => console.log(error));
+    }
+
     return (
         <div>
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader color="danger">
-                            <h4 className={classes.cardTitleWhite}>
-                                Edit Profile
-                            </h4>
+                            <h4 className={classes.cardTitleWhite}>Student</h4>
                             <p className={classes.cardCategoryWhite}>
-                                Complete your profile
+                                Complete the student information
                             </p>
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={5}>
-                                    <CustomInput
-                                        labelText="Company (disabled)"
-                                        id="company-disabled"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                        inputProps={{
-                                            disabled: true,
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={3}>
-                                    <CustomInput
-                                        labelText="Username"
-                                        id="username"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                    <CustomInput
-                                        labelText="Email address"
-                                        id="email-address"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
                                 <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
-                                        labelText="First Name"
-                                        id="first-name"
+                                        labelText="id"
+                                        id="id"
                                         formControlProps={{
                                             fullWidth: true,
                                         }}
@@ -93,37 +87,8 @@ export default function UserProfile() {
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
-                                        labelText="Last Name"
-                                        id="last-name"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                    />
-                                </GridItem>
-                            </GridContainer>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={4}>
-                                    <CustomInput
-                                        labelText="City"
-                                        id="city"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                    <CustomInput
-                                        labelText="Country"
-                                        id="country"
-                                        formControlProps={{
-                                            fullWidth: true,
-                                        }}
-                                    />
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                    <CustomInput
-                                        labelText="Postal Code"
-                                        id="postal-code"
+                                        labelText="matricula"
+                                        id="matricula"
                                         formControlProps={{
                                             fullWidth: true,
                                         }}
@@ -132,26 +97,60 @@ export default function UserProfile() {
                             </GridContainer>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
-                                    <InputLabel style={{ color: "#AAAAAA" }}>
-                                        About me
-                                    </InputLabel>
                                     <CustomInput
-                                        labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                                        id="about-me"
+                                        labelText="nome"
+                                        id="nome"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                        }}
+                                    />
+                                </GridItem>
+                            </GridContainer>
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CustomInput
+                                        labelText="cpf"
+                                        id="cpf"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                        }}
+                                    />
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={6}>
+                                    <CustomInput
+                                        labelText="idEndereco"
+                                        id="idEndereco"
+                                        formControlProps={{
+                                            fullWidth: true,
+                                        }}
+                                    />
+                                </GridItem>
+                            </GridContainer>
+                            <GridContainer>
+                                <GridItem xs={12} sm={12} md={12}>
+                                    <CustomInput
+                                        labelText="curso"
+                                        id="curso"
                                         formControlProps={{
                                             fullWidth: true,
                                         }}
                                         inputProps={{
                                             multiline: true,
                                             rows: 5,
-                                            value: "abc",
                                         }}
                                     />
                                 </GridItem>
                             </GridContainer>
                         </CardBody>
                         <CardFooter>
-                            <Button color="primary">Update Profile</Button>
+                            <Button color="danger">Cancel</Button>
+                            <Button color="success" onClick={() => handleCreate({id: document.getElementById('id').value,
+                                cpf: document.getElementById('cpf').value,
+                                matricula: document.getElementById('matricula').value,
+                                nome: document.getElementById('nome').value,
+                                idEndereco: document.getElementById('idEndereco').value,
+                                curso: document.getElementById('curso').value
+                                })}>Save</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>
